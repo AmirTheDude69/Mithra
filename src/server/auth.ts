@@ -8,6 +8,21 @@ import { hashApiKey } from './domain/apiKey.js';
 
 const privy = new PrivyClient(serverEnv.PRIVY_APP_ID, serverEnv.PRIVY_APP_SECRET);
 
+function getPrivyVerificationKeyOverride(): string | undefined {
+  const key = serverEnv.PRIVY_VERIFICATION_KEY;
+  if (!key) {
+    return undefined;
+  }
+
+  // The SDK expects a PEM public key string for override. If env contains a JWKS URL,
+  // let the SDK fetch the correct verification key from Privy using app credentials.
+  if (key.startsWith('http://') || key.startsWith('https://')) {
+    return undefined;
+  }
+
+  return key;
+}
+
 export type RequestPrincipal =
   | {
       mode: 'privy';
@@ -77,7 +92,10 @@ export async function authenticateRequest(
     const token = parseBearerToken(firstHeader(req.headers.authorization));
     if (token) {
       try {
-        const claims = await privy.verifyAuthToken(token, serverEnv.PRIVY_VERIFICATION_KEY);
+        const verificationKeyOverride = getPrivyVerificationKeyOverride();
+        const claims = verificationKeyOverride
+          ? await privy.verifyAuthToken(token, verificationKeyOverride)
+          : await privy.verifyAuthToken(token);
         return {
           mode: 'privy',
           privyDid: claims.userId,
@@ -127,7 +145,7 @@ export async function getPrivyProfile(principal: RequestPrincipal) {
     unauthorized('Privy authentication is required');
   }
 
-  return privy.getUser(principal.privyDid);
+  return privy.getUser({ idToken: principal.accessToken });
 }
 
 export function extractWalletAddresses(privyUser: { linkedAccounts?: Array<{ type?: string; address?: string }> }) {
