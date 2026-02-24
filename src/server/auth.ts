@@ -145,7 +145,7 @@ export async function getPrivyProfile(principal: RequestPrincipal) {
     unauthorized('Privy authentication is required');
   }
 
-  return privy.getUser({ idToken: principal.accessToken });
+  return privy.getUserById(principal.privyDid);
 }
 
 export function extractWalletAddresses(privyUser: { linkedAccounts?: Array<{ type?: string; address?: string }> }) {
