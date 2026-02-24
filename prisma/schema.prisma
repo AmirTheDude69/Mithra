@@ -1,0 +1,262 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserType {
+  HUMAN
+  AI_AGENT
+}
+
+enum ProblemCategory {
+  MATHEMATICS
+  ALGORITHMS
+  IQ
+  CRYPTOGRAPHY
+}
+
+enum ProblemDifficulty {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  LEGENDARY
+}
+
+enum TimeframeOption {
+  H24
+  D3
+  D7
+  D30
+}
+
+enum ProblemStatus {
+  ACTIVE
+  SOLVED
+  EXPIRED_UNSOLVED
+}
+
+enum ManualReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum LedgerType {
+  STARTING_CREDIT
+  POST_FEE
+  ATTEMPT_FEE
+  PLATFORM_FEE
+  POT_CONTRIBUTION
+  SOLVER_PAYOUT
+  POSTER_PAYOUT
+}
+
+enum ScoreEventType {
+  PROBLEM_POSTED
+  PROBLEM_SOLVED
+  PROBLEM_EXPIRED_UNSOLVED
+}
+
+model User {
+  id                    String   @id @default(cuid())
+  privyDid              String   @unique
+  username              String   @unique
+  bio                   String?
+  avatarUrl             String?
+  userType              UserType @default(HUMAN)
+  virtualBalanceCents   Int      @default(0)
+  postedCount           Int      @default(0)
+  solvedCount           Int      @default(0)
+  unansweredPostedCount Int      @default(0)
+  points                Int      @default(0)
+  totalEarnedCents      Int      @default(0)
+  totalSpentCents       Int      @default(0)
+  winStreak             Int      @default(0)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  wallets                 Wallet[]
+  postedProblems          Problem[]             @relation("PosterProblems")
+  solvedProblems          Problem[]             @relation("SolvedProblems")
+  attempts                Attempt[]
+  solveWindows            SolveWindow[]
+  manualReviewsAuthored   ManualReviewRequest[] @relation("ManualReviewSolver")
+  manualReviewsToResolve  ManualReviewRequest[] @relation("ManualReviewPoster")
+  ledgerEntries           LedgerEntry[]
+  scoreEvents             ScoreEvent[]
+  apiKeys                 ApiKey[]
+}
+
+model Wallet {
+  id        String   @id @default(cuid())
+  userId    String
+  address   String   @unique
+  chainType String?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Problem {
+  id               String            @id @default(cuid())
+  title            String
+  description      String
+  category         ProblemCategory
+  difficulty       ProblemDifficulty
+  canonicalAnswer  String
+  normalizedAnswer String
+  explanation      String
+  timeframe        TimeframeOption
+  posterId         String
+  potCents         Int               @default(0)
+  attemptsCount    Int               @default(0)
+  status           ProblemStatus     @default(ACTIVE)
+  solvedById       String?
+  solvedAt         DateTime?
+  expiresAt        DateTime
+  settledAt        DateTime?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  poster               User                  @relation("PosterProblems", fields: [posterId], references: [id], onDelete: Cascade)
+  solvedBy             User?                 @relation("SolvedProblems", fields: [solvedById], references: [id], onDelete: SetNull)
+  tags                 ProblemTag[]
+  attempts             Attempt[]
+  solveWindows         SolveWindow[]
+  manualReviewRequests ManualReviewRequest[]
+  ledgerEntries        LedgerEntry[]
+  scoreEvents          ScoreEvent[]
+
+  @@index([status, expiresAt])
+  @@index([posterId, createdAt])
+  @@index([solvedById, createdAt])
+}
+
+model ProblemTag {
+  id        String   @id @default(cuid())
+  problemId String
+  tag       String
+  createdAt DateTime @default(now())
+
+  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+
+  @@index([problemId])
+  @@index([tag])
+  @@unique([problemId, tag])
+}
+
+model SolveWindow {
+  id        String   @id @default(cuid())
+  userId    String
+  problemId String
+  startsAt  DateTime
+  endsAt    DateTime
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, problemId])
+  @@index([problemId])
+  @@index([userId, endsAt])
+}
+
+model Attempt {
+  id                 String   @id @default(cuid())
+  userId             String
+  problemId          String
+  answerRaw          String
+  answerNormalized   String
+  isCorrect          Boolean
+  submittedAt        DateTime @default(now())
+  windowEndsAt       DateTime
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  review  ManualReviewRequest?
+
+  @@index([problemId, submittedAt])
+  @@index([userId, problemId, submittedAt])
+}
+
+model ManualReviewRequest {
+  id             String             @id @default(cuid())
+  problemId      String
+  attemptId      String             @unique
+  solverId       String
+  posterId       String
+  reason         String?
+  status         ManualReviewStatus @default(PENDING)
+  resolutionNote String?
+  resolvedAt     DateTime?
+  createdAt      DateTime           @default(now())
+
+  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  attempt Attempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  solver  User    @relation("ManualReviewSolver", fields: [solverId], references: [id], onDelete: Cascade)
+  poster  User    @relation("ManualReviewPoster", fields: [posterId], references: [id], onDelete: Cascade)
+
+  @@index([problemId, status])
+  @@index([posterId, status])
+}
+
+model LedgerEntry {
+  id         String     @id @default(cuid())
+  userId     String?
+  problemId  String?
+  type       LedgerType
+  amountCents Int
+  metadata   Json?
+  createdAt  DateTime   @default(now())
+
+  user    User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  problem Problem? @relation(fields: [problemId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@index([problemId, createdAt])
+  @@index([type, createdAt])
+}
+
+model PlatformTreasury {
+  id           Int      @id
+  balanceCents Int      @default(0)
+  updatedAt    DateTime @updatedAt
+}
+
+model ScoreEvent {
+  id         String         @id @default(cuid())
+  userId     String
+  problemId  String?
+  type       ScoreEventType
+  points     Int
+  createdAt  DateTime       @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  problem Problem? @relation(fields: [problemId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@index([type, createdAt])
+  @@index([createdAt])
+}
+
+model ApiKey {
+  id         String   @id @default(cuid())
+  userId     String
+  name       String?
+  keyPrefix  String
+  keyHash    String   @unique
+  createdAt  DateTime @default(now())
+  lastUsedAt DateTime?
+  revokedAt  DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([revokedAt])
+}

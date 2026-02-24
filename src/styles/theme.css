@@ -1,0 +1,264 @@
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-size: 16px;
+  --background: #f5f0e6;
+  --foreground: #1c1c1c;
+  --card: transparent;
+  --card-foreground: #1c1c1c;
+  --popover: #f5f0e6;
+  --popover-foreground: #1c1c1c;
+  --primary: #1a3a5c;
+  --primary-foreground: #f5f0e6;
+  --secondary: transparent;
+  --secondary-foreground: #1c1c1c;
+  --muted: transparent;
+  --muted-foreground: #6b6b6b;
+  --accent: #1a3a5c;
+  --accent-foreground: #f5f0e6;
+  --destructive: #9b1b30;
+  --destructive-foreground: #f5f0e6;
+  --border: rgba(28, 28, 28, 0.15);
+  --input: transparent;
+  --input-background: transparent;
+  --switch-background: rgba(28, 28, 28, 0.1);
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --ring: #1a3a5c;
+  --chart-1: #1c1c1c;
+  --chart-2: #1a3a5c;
+  --chart-3: #9b1b30;
+  --chart-4: #2d5a3d;
+  --chart-5: #6b6b6b;
+  --radius: 2px;
+  --sidebar: transparent;
+  --sidebar-foreground: #1c1c1c;
+  --sidebar-primary: #1a3a5c;
+  --sidebar-primary-foreground: #f5f0e6;
+  --sidebar-accent: transparent;
+  --sidebar-accent-foreground: #1c1c1c;
+  --sidebar-border: rgba(28, 28, 28, 0.15);
+  --sidebar-ring: #1a3a5c;
+
+  /* ── Multi-pen notebook system ── */
+  --pen-black: #1c1c1c;
+  --pen-black-soft: #2e2e2e;
+  --pen-gray: #6b6b6b;
+  --pen-gray-light: #9a9a9a;
+  --pen-blue: #1a3a5c;
+  --pen-blue-light: #2d5f8a;
+  --pen-crimson: #9b1b30;
+  --pen-crimson-light: #b8364d;
+  --pen-green: #2d5a3d;
+  --pen-green-light: #3d7a52;
+
+  /* Notebook ruling */
+  --rule-blue: rgba(120, 160, 210, 0.28);
+  --rule-red: rgba(155, 27, 48, 0.18);
+  --rule-spacing: 28px;
+  --margin-left: 72px;
+
+  /* Legacy aliases */
+  --ink: var(--pen-black);
+  --ink-dark: #0f0f0f;
+  --ink-light: var(--pen-black-soft);
+  --ink-faded: rgba(28, 28, 28, 0.45);
+  --ink-ghost: rgba(28, 28, 28, 0.18);
+  --ink-whisper: rgba(28, 28, 28, 0.1);
+  --ink-trace: rgba(28, 28, 28, 0.05);
+  --paper: #f5f0e6;
+  --paper-light: #faf7f0;
+  --paper-dark: #ece5d8;
+  --grid-line: rgba(100, 140, 180, 0.1);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-switch-background: var(--switch-background);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 1px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --color-pen-black: var(--pen-black);
+  --color-pen-black-soft: var(--pen-black-soft);
+  --color-pen-gray: var(--pen-gray);
+  --color-pen-gray-light: var(--pen-gray-light);
+  --color-pen-blue: var(--pen-blue);
+  --color-pen-blue-light: var(--pen-blue-light);
+  --color-pen-crimson: var(--pen-crimson);
+  --color-pen-crimson-light: var(--pen-crimson-light);
+  --color-pen-green: var(--pen-green);
+  --color-pen-green-light: var(--pen-green-light);
+
+  --color-ink: var(--ink);
+  --color-ink-dark: var(--ink-dark);
+  --color-ink-light: var(--ink-light);
+  --color-ink-faded: var(--ink-faded);
+  --color-ink-ghost: var(--ink-ghost);
+  --color-ink-whisper: var(--ink-whisper);
+  --color-ink-trace: var(--ink-trace);
+  --color-paper: var(--paper);
+  --color-paper-light: var(--paper-light);
+  --color-paper-dark: var(--paper-dark);
+  --color-grid-line: var(--grid-line);
+}
+
+@keyframes ink-write {
+  0% { width: 0; }
+  100% { width: 100%; }
+}
+
+@keyframes ink-fade-in {
+  0% { opacity: 0; transform: translateY(4px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Patrick Hand', cursive;
+    /* ── College-ruled notebook paper ──
+       Horizontal blue lines + red margin line */
+    background-image:
+      /* Red margin line */
+      linear-gradient(
+        90deg,
+        transparent calc(var(--margin-left) - 1px),
+        var(--rule-red) calc(var(--margin-left) - 1px),
+        var(--rule-red) calc(var(--margin-left) + 1px),
+        transparent calc(var(--margin-left) + 1px)
+      ),
+      /* Blue horizontal rules */
+      repeating-linear-gradient(
+        to bottom,
+        transparent,
+        transparent calc(var(--rule-spacing) - 1px),
+        var(--rule-blue) calc(var(--rule-spacing) - 1px),
+        var(--rule-blue) var(--rule-spacing)
+      );
+    background-size: 100% var(--rule-spacing);
+    background-attachment: fixed;
+    background-position: 0 10px;
+  }
+
+  html {
+    font-size: var(--font-size);
+  }
+
+  h1 {
+    font-family: 'Caveat', cursive;
+    font-size: 2.25rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--pen-black);
+  }
+
+  h2 {
+    font-family: 'Caveat', cursive;
+    font-size: 1.75rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--pen-black);
+  }
+
+  h3 {
+    font-family: 'Caveat', cursive;
+    font-size: 1.375rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--pen-black);
+  }
+
+  h4 {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 1.125rem;
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+    color: var(--pen-black);
+  }
+
+  label {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 1.0625rem;
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+    color: var(--pen-gray);
+  }
+
+  button {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 1.0625rem;
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  input, textarea, select {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 1rem;
+    font-weight: var(--font-weight-normal);
+    line-height: 1.5;
+  }
+
+  code, pre {
+    font-family: 'Inconsolata', 'Courier New', monospace;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--ink-ghost);
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--ink-faded);
+  }
+
+  ::selection {
+    background: rgba(26, 58, 92, 0.15);
+    color: var(--pen-black);
+  }
+}

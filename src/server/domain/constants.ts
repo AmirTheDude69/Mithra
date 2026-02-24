@@ -1,0 +1,12 @@
+export const POSTING_FEE_CENTS = 100;
+export const ATTEMPT_FEE_CENTS = 10;
+export const PLATFORM_CUT_CENTS_FROM_POST = 20;
+export const PLATFORM_CUT_CENTS_FROM_ATTEMPT = 2;
+export const POT_CONTRIBUTION_CENTS_FROM_POST = 80;
+export const POT_CONTRIBUTION_CENTS_FROM_ATTEMPT = 8;
+
+export const POINTS_POSTED = 1;
+export const POINTS_SOLVED = 10;
+export const POINTS_UNSOLVED_EXPIRED = 10;
+
+export const SOLVE_WINDOW_HOURS = 24;
