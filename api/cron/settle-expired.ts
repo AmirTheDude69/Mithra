@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { serverEnv } from '../../src/server/env';
-import { methodNotAllowed, ok, sendError, unauthorized } from '../../src/server/http/response';
-import { settleExpiredProblems } from '../../src/server/services/arena';
+import { serverEnv } from '../../src/server/env.js';
+import { methodNotAllowed, ok, sendError, unauthorized } from '../../src/server/http/response.js';
+import { settleExpiredProblems } from '../../src/server/services/arena.js';
 
 function firstHeader(value: string | string[] | undefined): string | undefined {
   if (Array.isArray(value)) {

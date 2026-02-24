@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { generatePlainApiKey, getApiKeyPrefix, hashApiKey } from './apiKey';
+import { generatePlainApiKey, getApiKeyPrefix, hashApiKey } from './apiKey.js';
 
 describe('api key utilities', () => {
   it('generates expected prefix', () => {

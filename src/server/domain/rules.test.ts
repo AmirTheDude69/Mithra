@@ -6,9 +6,9 @@ import {
   getPostingFeeBreakdown,
   getScoreBreakdown,
   isSolveWindowActive,
-} from './rules';
-import { normalizeAnswer } from './normalize';
-import { getUtcPeriodStart } from './leaderboard';
+} from './rules.js';
+import { normalizeAnswer } from './normalize.js';
+import { getUtcPeriodStart } from './leaderboard.js';
 
 describe('fee breakdowns', () => {
   it('matches posting split of 100 cents into 20 platform and 80 pot', () => {

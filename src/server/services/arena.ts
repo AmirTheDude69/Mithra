@@ -6,7 +6,7 @@ import {
   ScoreEventType,
   UserType,
 } from '@prisma/client';
-import { prisma } from '../db';
+import { prisma } from '../db.js';
 import {
   ATTEMPT_FEE_CENTS,
   PLATFORM_CUT_CENTS_FROM_ATTEMPT,
@@ -18,7 +18,7 @@ import {
   POT_CONTRIBUTION_CENTS_FROM_ATTEMPT,
   POT_CONTRIBUTION_CENTS_FROM_POST,
   SOLVE_WINDOW_HOURS,
-} from '../domain/constants';
+} from '../domain/constants.js';
 import {
   CategoryInput,
   DifficultyInput,
@@ -26,11 +26,11 @@ import {
   categoryInputToEnum,
   difficultyInputToEnum,
   userTypeInputToEnum,
-} from '../domain/mappers';
-import { normalizeAnswer, normalizeUsername } from '../domain/normalize';
-import { LeaderboardPeriod, getUtcPeriodStart } from '../domain/leaderboard';
-import { TimeframeInput, timeframeInputToEnum, timeframeToMs } from '../domain/timeframe';
-import { badRequest, conflict, notFound } from '../http/response';
+} from '../domain/mappers.js';
+import { normalizeAnswer, normalizeUsername } from '../domain/normalize.js';
+import { LeaderboardPeriod, getUtcPeriodStart } from '../domain/leaderboard.js';
+import { TimeframeInput, timeframeInputToEnum, timeframeToMs } from '../domain/timeframe.js';
+import { badRequest, conflict, notFound } from '../http/response.js';
 
 const TREASURY_ID = 1;
 

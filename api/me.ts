@@ -1,18 +1,18 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { z } from 'zod';
-import { authenticateRequest, getLocalUserFromPrincipal } from '../src/server/auth';
-import { prisma } from '../src/server/db';
-import { toUserSummary } from '../src/server/dto';
-import { userTypeInputToEnum } from '../src/server/domain/mappers';
-import { normalizeUsername } from '../src/server/domain/normalize';
-import { parseBody } from '../src/server/http/body';
+import { authenticateRequest, getLocalUserFromPrincipal } from '../src/server/auth.js';
+import { prisma } from '../src/server/db.js';
+import { toUserSummary } from '../src/server/dto.js';
+import { userTypeInputToEnum } from '../src/server/domain/mappers.js';
+import { normalizeUsername } from '../src/server/domain/normalize.js';
+import { parseBody } from '../src/server/http/body.js';
 import {
   badRequest,
   conflict,
   methodNotAllowed,
   ok,
   sendError,
-} from '../src/server/http/response';
+} from '../src/server/http/response.js';
 
 const patchSchema = z.object({
   username: z.string().optional(),

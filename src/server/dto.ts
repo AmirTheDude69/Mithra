@@ -5,14 +5,14 @@ import type {
   User,
   ManualReviewRequest,
 } from '@prisma/client';
-import { centsToDollars } from './domain/format';
+import { centsToDollars } from './domain/format.js';
 import {
   categoryEnumToInput,
   difficultyEnumToInput,
   statusEnumToInput,
   userTypeEnumToInput,
-} from './domain/mappers';
-import { timeframeEnumToInput } from './domain/timeframe';
+} from './domain/mappers.js';
+import { timeframeEnumToInput } from './domain/timeframe.js';
 
 export function toUserSummary(user: User) {
   return {

@@ -1,8 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { authenticateRequest, getLocalUserFromPrincipal } from '../../src/server/auth';
-import { toAttemptSummary, toProblemSummary } from '../../src/server/dto';
-import { methodNotAllowed, ok, sendError } from '../../src/server/http/response';
-import { getUserActivity } from '../../src/server/services/arena';
+import { authenticateRequest, getLocalUserFromPrincipal } from '../../src/server/auth.js';
+import { toAttemptSummary, toProblemSummary } from '../../src/server/dto.js';
+import { methodNotAllowed, ok, sendError } from '../../src/server/http/response.js';
+import { getUserActivity } from '../../src/server/services/arena.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'GET') {

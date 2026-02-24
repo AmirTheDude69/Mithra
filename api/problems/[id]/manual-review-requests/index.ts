@@ -1,10 +1,10 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { z } from 'zod';
-import { authenticateRequest, getLocalUserFromPrincipal } from '../../../../src/server/auth';
-import { toManualReviewSummary } from '../../../../src/server/dto';
-import { parseBody } from '../../../../src/server/http/body';
-import { methodNotAllowed, ok, sendError } from '../../../../src/server/http/response';
-import { createManualReviewRequest } from '../../../../src/server/services/arena';
+import { authenticateRequest, getLocalUserFromPrincipal } from '../../../../src/server/auth.js';
+import { toManualReviewSummary } from '../../../../src/server/dto.js';
+import { parseBody } from '../../../../src/server/http/body.js';
+import { methodNotAllowed, ok, sendError } from '../../../../src/server/http/response.js';
+import { createManualReviewRequest } from '../../../../src/server/services/arena.js';
 
 const schema = z.object({
   reason: z.string().optional(),

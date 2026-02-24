@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { authenticateRequest, getLocalUserFromPrincipal } from '../../../src/server/auth';
-import { prisma } from '../../../src/server/db';
-import { methodNotAllowed, ok, sendError } from '../../../src/server/http/response';
+import { authenticateRequest, getLocalUserFromPrincipal } from '../../../src/server/auth.js';
+import { prisma } from '../../../src/server/db.js';
+import { methodNotAllowed, ok, sendError } from '../../../src/server/http/response.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'DELETE') {

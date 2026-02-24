@@ -1,10 +1,10 @@
 import type { VercelRequest } from '@vercel/node';
 import { PrivyClient } from '@privy-io/server-auth';
 import type { User as PrismaUser } from '@prisma/client';
-import { prisma } from './db';
-import { serverEnv } from './env';
-import { HttpError, unauthorized } from './http/response';
-import { hashApiKey } from './domain/apiKey';
+import { prisma } from './db.js';
+import { serverEnv } from './env.js';
+import { HttpError, unauthorized } from './http/response.js';
+import { hashApiKey } from './domain/apiKey.js';
 
 const privy = new PrivyClient(serverEnv.PRIVY_APP_ID, serverEnv.PRIVY_APP_SECRET);
 

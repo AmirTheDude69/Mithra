@@ -1,15 +1,15 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { generateClientTokenFromReadWriteToken } from '@vercel/blob/client';
 import { z } from 'zod';
-import { authenticateRequest, getLocalUserFromPrincipal } from '../../../src/server/auth';
-import { serverEnv } from '../../../src/server/env';
-import { parseBody } from '../../../src/server/http/body';
+import { authenticateRequest, getLocalUserFromPrincipal } from '../../../src/server/auth.js';
+import { serverEnv } from '../../../src/server/env.js';
+import { parseBody } from '../../../src/server/http/body.js';
 import {
   badRequest,
   methodNotAllowed,
   ok,
   sendError,
-} from '../../../src/server/http/response';
+} from '../../../src/server/http/response.js';
 
 const schema = z.object({
   filename: z.string().min(1),

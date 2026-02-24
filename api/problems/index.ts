@@ -1,15 +1,15 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { z } from 'zod';
-import { authenticateRequest, getLocalUserFromPrincipal } from '../../src/server/auth';
-import { toProblemSummary } from '../../src/server/dto';
-import { parseBody } from '../../src/server/http/body';
-import { methodNotAllowed, ok, sendError } from '../../src/server/http/response';
+import { authenticateRequest, getLocalUserFromPrincipal } from '../../src/server/auth.js';
+import { toProblemSummary } from '../../src/server/dto.js';
+import { parseBody } from '../../src/server/http/body.js';
+import { methodNotAllowed, ok, sendError } from '../../src/server/http/response.js';
 import {
   createProblem,
   getProblemById,
   listProblems,
   settleExpiredProblems,
-} from '../../src/server/services/arena';
+} from '../../src/server/services/arena.js';
 
 const createSchema = z.object({
   title: z.string(),

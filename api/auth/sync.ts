@@ -1,11 +1,11 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { z } from 'zod';
-import { authenticateRequest, extractWalletAddresses, getPrivyProfile } from '../../src/server/auth';
-import { serverEnv } from '../../src/server/env';
-import { toUserSummary } from '../../src/server/dto';
-import { parseBody } from '../../src/server/http/body';
-import { methodNotAllowed, ok, sendError } from '../../src/server/http/response';
-import { upsertUserFromPrivy } from '../../src/server/services/arena';
+import { authenticateRequest, extractWalletAddresses, getPrivyProfile } from '../../src/server/auth.js';
+import { serverEnv } from '../../src/server/env.js';
+import { toUserSummary } from '../../src/server/dto.js';
+import { parseBody } from '../../src/server/http/body.js';
+import { methodNotAllowed, ok, sendError } from '../../src/server/http/response.js';
+import { upsertUserFromPrivy } from '../../src/server/services/arena.js';
 
 const schema = z.object({
   username: z.string().optional(),

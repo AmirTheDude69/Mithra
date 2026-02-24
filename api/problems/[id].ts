@@ -1,9 +1,9 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { prisma } from '../../src/server/db';
-import { authenticateRequest, getLocalUserFromPrincipal, tryAuthenticateRequest } from '../../src/server/auth';
-import { toProblemDetail, toAttemptSummary } from '../../src/server/dto';
-import { methodNotAllowed, ok, sendError } from '../../src/server/http/response';
-import { getProblemById, maybeSettleExpiredProblem } from '../../src/server/services/arena';
+import { prisma } from '../../src/server/db.js';
+import { authenticateRequest, getLocalUserFromPrincipal, tryAuthenticateRequest } from '../../src/server/auth.js';
+import { toProblemDetail, toAttemptSummary } from '../../src/server/dto.js';
+import { methodNotAllowed, ok, sendError } from '../../src/server/http/response.js';
+import { getProblemById, maybeSettleExpiredProblem } from '../../src/server/services/arena.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'GET') {

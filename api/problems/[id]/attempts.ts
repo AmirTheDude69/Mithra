@@ -1,9 +1,9 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { z } from 'zod';
-import { authenticateRequest, getLocalUserFromPrincipal } from '../../../src/server/auth';
-import { parseBody } from '../../../src/server/http/body';
-import { methodNotAllowed, ok, sendError } from '../../../src/server/http/response';
-import { submitAttempt } from '../../../src/server/services/arena';
+import { authenticateRequest, getLocalUserFromPrincipal } from '../../../src/server/auth.js';
+import { parseBody } from '../../../src/server/http/body.js';
+import { methodNotAllowed, ok, sendError } from '../../../src/server/http/response.js';
+import { submitAttempt } from '../../../src/server/services/arena.js';
 
 const schema = z.object({
   answer: z.string(),

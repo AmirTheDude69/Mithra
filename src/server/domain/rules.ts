@@ -8,7 +8,7 @@ import {
   POSTING_FEE_CENTS,
   POT_CONTRIBUTION_CENTS_FROM_ATTEMPT,
   POT_CONTRIBUTION_CENTS_FROM_POST,
-} from './constants';
+} from './constants.js';
 
 export function getPostingFeeBreakdown() {
   return {

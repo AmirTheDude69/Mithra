@@ -1,11 +1,11 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { z } from 'zod';
-import { authenticateRequest, getLocalUserFromPrincipal } from '../../../src/server/auth';
-import { prisma } from '../../../src/server/db';
-import { serverEnv } from '../../../src/server/env';
-import { generatePlainApiKey, getApiKeyPrefix, hashApiKey } from '../../../src/server/domain/apiKey';
-import { parseBody } from '../../../src/server/http/body';
-import { methodNotAllowed, ok, sendError } from '../../../src/server/http/response';
+import { authenticateRequest, getLocalUserFromPrincipal } from '../../../src/server/auth.js';
+import { prisma } from '../../../src/server/db.js';
+import { serverEnv } from '../../../src/server/env.js';
+import { generatePlainApiKey, getApiKeyPrefix, hashApiKey } from '../../../src/server/domain/apiKey.js';
+import { parseBody } from '../../../src/server/http/body.js';
+import { methodNotAllowed, ok, sendError } from '../../../src/server/http/response.js';
 
 const createSchema = z.object({
   name: z.string().optional(),
