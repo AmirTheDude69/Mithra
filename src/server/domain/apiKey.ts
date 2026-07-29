@@ -1,4 +1,4 @@
-import { createHash, randomBytes } from 'node:crypto';
+import { createHmac, randomBytes } from 'node:crypto';
 
 export function generatePlainApiKey(): string {
   return `mithra_pk_${randomBytes(24).toString('hex')}`;
@@ -11,7 +11,7 @@ export function getApiKeyPrefix(apiKey: string): string {
 export function hashApiKey(apiKey: string, pepper: string): string {
   // API keys are generated from 192 bits of cryptographic randomness above,
   // not chosen by users. This is a keyed lookup fingerprint, not a password
-  // verifier; a deliberately slow password KDF would only add server-side DoS
-  // cost without improving resistance to brute force.
-  return createHash('sha256').update(`${pepper}:${apiKey}`).digest('hex');
+  // verifier. HMAC keeps the lookup deterministic while using the pepper as a
+  // real cryptographic key instead of concatenating it into an unkeyed digest.
+  return createHmac('sha256', pepper).update(apiKey).digest('hex');
 }

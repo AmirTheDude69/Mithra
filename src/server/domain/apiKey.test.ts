@@ -11,7 +11,9 @@ describe('api key utilities', () => {
   it('hashes deterministically with pepper', () => {
     const key = 'mithra_pk_abc123';
     const pepper = 'pepper';
-    expect(hashApiKey(key, pepper)).toBe(hashApiKey(key, pepper));
+    expect(hashApiKey(key, pepper)).toBe(
+      '17e0e8c778ee04aae9a6be61f18bf79dd759c092a971c312cff669f42c0b9bc6',
+    );
   });
 
   it('changes hash if pepper changes', () => {
