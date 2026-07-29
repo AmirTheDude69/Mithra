@@ -55,7 +55,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return;
     }
 
-    const principal = await authenticateRequest(req, { allowApiKey: true, allowPrivy: true });
+    const principal = await authenticateRequest(req);
     const user = await getLocalUserFromPrincipal(principal);
     const input = createSchema.parse(parseBody(req));
 

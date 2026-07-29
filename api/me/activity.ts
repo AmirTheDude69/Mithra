@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { authenticateRequest, getLocalUserFromPrincipal } from '../../src/server/auth.js';
+import { authenticatePrivyRequest, getLocalUserFromPrincipal } from '../../src/server/auth.js';
 import { toAttemptSummary, toProblemSummary } from '../../src/server/dto.js';
 import { methodNotAllowed, ok, sendError } from '../../src/server/http/response.js';
 import { getUserActivity } from '../../src/server/services/arena.js';
@@ -11,7 +11,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const principal = await authenticateRequest(req, { allowApiKey: false, allowPrivy: true });
+    const principal = await authenticatePrivyRequest(req);
     const user = await getLocalUserFromPrincipal(principal);
     const activity = await getUserActivity(user.id);
 

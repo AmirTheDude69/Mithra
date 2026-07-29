@@ -18,7 +18,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const principal = await authenticateRequest(req, { allowApiKey: true, allowPrivy: true });
+    const principal = await authenticateRequest(req);
     const user = await getLocalUserFromPrincipal(principal);
     const problemId = String(req.query.id ?? '');
     const requestId = String(req.query.requestId ?? '');

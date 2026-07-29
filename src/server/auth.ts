@@ -42,80 +42,95 @@ function firstHeader(value: string | string[] | undefined): string | undefined {
   return value;
 }
 
-function parseBearerToken(authHeader: string | undefined): string | null {
+function requireBearerToken(authHeader: string | undefined): string {
   if (!authHeader) {
+    unauthorized('Missing authentication');
+  }
+
+  const parts = authHeader.trim().split(/\s+/);
+  if (parts.length !== 2 || parts[0]?.toLowerCase() !== 'bearer' || !parts[1]) {
+    unauthorized('Invalid authorization header');
+  }
+
+  const token = parts[1];
+  if (token.length > 16_384) {
+    unauthorized('Invalid auth token');
+  }
+
+  return token;
+}
+
+async function tryAuthenticateApiKey(req: VercelRequest): Promise<RequestPrincipal | null> {
+  const apiKeyHeader = firstHeader(req.headers['x-api-key']);
+  if (!apiKeyHeader) {
     return null;
   }
 
-  const [scheme, token] = authHeader.split(' ');
-  if (scheme?.toLowerCase() !== 'bearer' || !token) {
+  const candidate = apiKeyHeader.trim();
+  if (candidate.length === 0 || candidate.length > 512) {
     return null;
   }
 
-  return token.trim();
+  const hashed = hashApiKey(candidate, serverEnv.API_KEY_PEPPER);
+  const key = await prisma.apiKey.findFirst({
+    where: {
+      keyHash: hashed,
+      revokedAt: null,
+    },
+  });
+
+  if (!key) {
+    return null;
+  }
+
+  await prisma.apiKey.update({
+    where: { id: key.id },
+    data: { lastUsedAt: new Date() },
+  });
+
+  return {
+    mode: 'api_key',
+    userId: key.userId,
+    keyId: key.id,
+  };
+}
+
+export async function authenticatePrivyRequest(
+  req: VercelRequest,
+): Promise<Extract<RequestPrincipal, { mode: 'privy' }>> {
+  const token = requireBearerToken(firstHeader(req.headers.authorization));
+
+  try {
+    const claims = await privy.verifyAuthToken(
+      token,
+      getPrivyVerificationKeyOverride(),
+    );
+    return {
+      mode: 'privy',
+      privyDid: claims.userId,
+      accessToken: token,
+    };
+  } catch {
+    unauthorized('Invalid auth token');
+  }
 }
 
 export async function authenticateRequest(
   req: VercelRequest,
-  options: { allowPrivy?: boolean; allowApiKey?: boolean } = {},
 ): Promise<RequestPrincipal> {
-  const allowPrivy = options.allowPrivy ?? true;
-  const allowApiKey = options.allowApiKey ?? true;
-
-  if (allowApiKey) {
-    const apiKeyHeader = firstHeader(req.headers['x-api-key']);
-    if (apiKeyHeader) {
-      const hashed = hashApiKey(apiKeyHeader.trim(), serverEnv.API_KEY_PEPPER);
-      const key = await prisma.apiKey.findFirst({
-        where: {
-          keyHash: hashed,
-          revokedAt: null,
-        },
-      });
-
-      if (key) {
-        await prisma.apiKey.update({
-          where: { id: key.id },
-          data: { lastUsedAt: new Date() },
-        });
-
-        return {
-          mode: 'api_key',
-          userId: key.userId,
-          keyId: key.id,
-        };
-      }
-    }
+  const apiKeyPrincipal = await tryAuthenticateApiKey(req);
+  if (apiKeyPrincipal) {
+    return apiKeyPrincipal;
   }
 
-  if (allowPrivy) {
-    const token = parseBearerToken(firstHeader(req.headers.authorization));
-    if (token) {
-      try {
-        const verificationKeyOverride = getPrivyVerificationKeyOverride();
-        const claims = verificationKeyOverride
-          ? await privy.verifyAuthToken(token, verificationKeyOverride)
-          : await privy.verifyAuthToken(token);
-        return {
-          mode: 'privy',
-          privyDid: claims.userId,
-          accessToken: token,
-        };
-      } catch {
-        unauthorized('Invalid auth token');
-      }
-    }
-  }
-
-  unauthorized('Missing authentication');
+  return authenticatePrivyRequest(req);
 }
 
 export async function tryAuthenticateRequest(
   req: VercelRequest,
-  options: { allowPrivy?: boolean; allowApiKey?: boolean } = {},
 ): Promise<RequestPrincipal | null> {
   try {
-    return await authenticateRequest(req, options);
+    return await authenticateRequest(req);
   } catch (error) {
     if (error instanceof HttpError && error.statusCode === 401) {
       return null;
