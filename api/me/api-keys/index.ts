@@ -49,7 +49,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         userId: user.id,
         name: input.name?.trim() || null,
         keyPrefix,
-        keyHash: hashApiKey(plaintext, serverEnv.API_KEY_PEPPER),
+        keyHash: await hashApiKey(plaintext, serverEnv.API_KEY_PEPPER),
       },
     });
 

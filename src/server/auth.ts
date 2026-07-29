@@ -71,7 +71,7 @@ async function tryAuthenticateApiKey(req: VercelRequest): Promise<RequestPrincip
     return null;
   }
 
-  const hashed = hashApiKey(candidate, serverEnv.API_KEY_PEPPER);
+  const hashed = await hashApiKey(candidate, serverEnv.API_KEY_PEPPER);
   const key = await prisma.apiKey.findFirst({
     where: {
       keyHash: hashed,

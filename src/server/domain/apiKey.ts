@@ -1,4 +1,4 @@
-import { createHmac, randomBytes } from 'node:crypto';
+import { randomBytes, scrypt } from 'node:crypto';
 
 export function generatePlainApiKey(): string {
   return `mithra_pk_${randomBytes(24).toString('hex')}`;
@@ -8,10 +8,18 @@ export function getApiKeyPrefix(apiKey: string): string {
   return apiKey.slice(0, 20);
 }
 
-export function hashApiKey(apiKey: string, pepper: string): string {
-  // API keys are generated from 192 bits of cryptographic randomness above,
-  // not chosen by users. This is a keyed lookup fingerprint, not a password
-  // verifier. HMAC keeps the lookup deterministic while using the pepper as a
-  // real cryptographic key instead of concatenating it into an unkeyed digest.
-  return createHmac('sha256', pepper).update(apiKey).digest('hex');
+export async function hashApiKey(apiKey: string, pepper: string): Promise<string> {
+  // A deterministic scrypt derivation preserves indexed lookups while making
+  // an offline database/pepper compromise substantially more expensive.
+  const derivedKey = await new Promise<Buffer>((resolve, reject) => {
+    scrypt(apiKey, pepper, 32, (error, result) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      resolve(result);
+    });
+  });
+
+  return derivedKey.toString('hex');
 }

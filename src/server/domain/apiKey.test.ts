@@ -8,16 +8,18 @@ describe('api key utilities', () => {
     expect(getApiKeyPrefix(key).startsWith('mithra_pk_')).toBe(true);
   });
 
-  it('hashes deterministically with pepper', () => {
+  it('hashes deterministically with pepper', async () => {
     const key = 'mithra_pk_abc123';
     const pepper = 'pepper';
-    expect(hashApiKey(key, pepper)).toBe(
-      '17e0e8c778ee04aae9a6be61f18bf79dd759c092a971c312cff669f42c0b9bc6',
+    await expect(hashApiKey(key, pepper)).resolves.toBe(
+      '61431395b6ed8da05d1deb865d8a77fa091f87e64618b5e9da709b23709d3064',
     );
   });
 
-  it('changes hash if pepper changes', () => {
+  it('changes hash if pepper changes', async () => {
     const key = 'mithra_pk_abc123';
-    expect(hashApiKey(key, 'a')).not.toBe(hashApiKey(key, 'b'));
+    await expect(hashApiKey(key, 'a')).resolves.not.toBe(
+      await hashApiKey(key, 'b'),
+    );
   });
 });
