@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { z } from 'zod';
-import { authenticateRequest, getLocalUserFromPrincipal } from '../src/server/auth.js';
+import { authenticatePrivyRequest, getLocalUserFromPrincipal } from '../src/server/auth.js';
 import { prisma } from '../src/server/db.js';
 import { toUserSummary } from '../src/server/dto.js';
 import { userTypeInputToEnum } from '../src/server/domain/mappers.js';
@@ -28,7 +28,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const principal = await authenticateRequest(req, { allowApiKey: false, allowPrivy: true });
+    const principal = await authenticatePrivyRequest(req);
     const user = await getLocalUserFromPrincipal(principal);
 
     if (req.method === 'GET') {
